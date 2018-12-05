@@ -1,29 +1,39 @@
 # -*- coding: utf-8 -*-
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from sqlalchemy import Column, Integer, String, ForeignKey, Date,DateTime,Boolean,Float,Numeric
 from sqlalchemy.orm import relationship, backref
+from datetime import datetime
 from msrj.dbPool import Base
 
-# 定义表结构
-class GameCompany(Base):
-    __tablename__ = 'game_company'
+'''产品类型'''
+class ProductType(Base):
+    __tablename__ = 'product_type'
+    id = Column(Integer,primary_key=True)
+    name = Column(String(50),nullable=False)
+    isValid = Column(Boolean,default=True)
+    create_date = Column(DateTime,default=datetime.now())
 
+    def __repr__(self):
+        return "id:{0} name:{1} isValid:{2}".format(self.id,self.name,self.isValid)
+
+'''产品基本信息'''
+class ProductInfo(Base):
+    __tablename__ = 'product_info'
     id = Column(Integer, primary_key=True)
-    name = Column(String(200), nullable=False)
-    country = Column(String(50))
+    code = Column(String(20),unique=True,nullable=False)
+    name = Column(String(50), nullable=False)
+    costPrice = Column(Numeric(10,2))
+    unit = Column(String(10))
+    salePrice = Column(Numeric(10,2))
 
+    isValid = Column(Boolean, default=True)
+    create_date = Column(DateTime, default=datetime.now())
+    update_date = Column(DateTime, default=datetime.now())
 
-class Game(Base):
-    __tablename__ = 'game'
+    product_type = Column(Integer,ForeignKey('product_type.id'),index=True)
+    type = relationship('ProductType',backref=backref('product_type'))
 
-    id = Column(Integer, primary_key=True)
-    company_id = Column(Integer, ForeignKey('game_company.id'), index=True)
-    category = Column(String(10))
-    name = Column(String(200), nullable=False)
-    release_date = Column(Date)
-
-    # 和Django不同，外键需要显式定义，具体好坏见仁见智
-    # 此处的relation可以为lazy加载外键内容时提供一些可配置的选项
-    company = relationship('GameCompany', backref=backref('games'))
+    def __repr__(self):
+        return "id:{0} code:{1} name:{2} isValid:{3}".format(self.id,self.code,self.name,self.isValid)
 
 from msrj.dbPool import engine
 
@@ -36,4 +46,4 @@ def drop_db():
     Base.metadata.drop_all(engine)
 
 # drop_db()
-init_db()
+# init_db()

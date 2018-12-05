@@ -1,18 +1,16 @@
 from msrj.dbPool import session
-from msrj.goods.models import Game
+from msrj.goods.models import ProductInfo
+import random
 
-
-game1 = Game(
-    # company=nintendo,
-    category="ACT",
-    name="Super Mario Bros",
-    release_date='1985-10-18'
+product1 = ProductInfo(
+    code = 'A' + str(random.randint(100,200)),
+    name = '产品一',
+    costPrice = random.random()
 )
 
-# session.add(game1)
-# session.commit()
+session.add(product1)
+session.commit()
 
+prod1 = session.query(ProductInfo)
+print(prod1.count())
 
-qrys = session.query(Game).filter_by(category="ACT")
-
-print(qrys.count())
