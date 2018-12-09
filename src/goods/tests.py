@@ -1,5 +1,5 @@
 from msrj.dbPool import session
-from msrj.goods.models import ProductInfo
+from goods import ProductInfo
 import random
 
 product1 = ProductInfo(
