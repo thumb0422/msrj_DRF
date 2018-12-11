@@ -1,5 +1,5 @@
 from msrj.dbPool import session
-from goods import ProductInfo
+from goods.models import ProductInfo
 import random
 
 product1 = ProductInfo(
@@ -11,6 +11,7 @@ product1 = ProductInfo(
 session.add(product1)
 session.commit()
 
-prod1 = session.query(ProductInfo)
+# prod1 = session.query(ProductInfo)
+prod1 = session.query(ProductInfo).order_by(ProductInfo.create_date)
 print(prod1.count())
 
